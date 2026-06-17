@@ -1,0 +1,24 @@
+# Environment
+.env
+.env.local
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+
+# Python
+**pycache**/
+.pytest_cache/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Testing
+coverage.xml
+
+# Build artifacts
+dist/
+build/

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "act_01", "category": "transport", "title": "Swap One Car Trip for Walking/Biking", "description": "Replace one short car trip (under 5km) with a walk or bike ride.", "impact_kgco2e_estimate": 1.05, "difficulty": "easy", "source_reference": "Internal calculation"
+  },
+  {
+    "id": "act_02", "category": "transport", "title": "Use Public Transit for One Commute", "description": "Leave the car at home and take the bus or train for one of your commutes to work this week.", "impact_kgco2e_estimate": 2.42, "difficulty": "medium", "source_reference": "Internal calculation"
+  },
+  {
+    "id": "act_10", "category": "transport", "title": "Plan an Eco-Friendly Route", "description": "Use a mapping app to find a route with less traffic for one of your trips, which can improve fuel efficiency.", "impact_kgco2e_estimate": 0.5, "difficulty": "easy", "source_reference": "Internal calculation"
+  },
+  {
+    "id": "act_15", "category": "transport", "title": "Check Your Tire Pressure", "description": "Properly inflated tires improve your vehicle's fuel efficiency. Check your tires and inflate them to the recommended PSI.", "impact_kgco2e_estimate": 3.0, "difficulty": "easy", "source_reference": "EPA"
+  },
+  {
+    "id": "act_21", "category": "transport", "title": "Avoid Aggressive Driving for a Day", "description": "Practice smooth acceleration and braking for a full day of driving to conserve fuel.", "impact_kgco2e_estimate": 1.5, "difficulty": "easy", "source_reference": "EPA"
+  },
+  {
+    "id": "act_03", "category": "food", "title": "Go Meatless for One Day", "description": "Choose one day this week to eat completely vegetarian. Avoid beef, chicken, and fish.", "impact_kgco2e_estimate": 2.5, "difficulty": "easy", "source_reference": "Based on average daily meat consumption"
+  },
+  {
+    "id": "act_04", "category": "food", "title": "Swap Beef for Chicken in One Meal", "description": "If you're having a meal with beef, try using chicken instead. It has a much lower carbon footprint.", "impact_kgco2e_estimate": 4.02, "difficulty": "easy", "source_reference": "Our World In Data"
+  },
+  {
+    "id": "act_08", "category": "food", "title": "Try a Plant-Based Milk Alternative", "description": "If you use dairy milk, try switching to oat, soy, or almond milk for your coffee or cereal this week.", "impact_kgco2e_estimate": 0.7, "difficulty": "easy", "source_reference": "Poore & Nemecek, 2018"
+  },
+  {
+    "id": "act_11", "category": "food", "title": "Finish Your Leftovers", "description": "Make a conscious effort to eat all your leftovers this week to prevent food waste, a major source of methane emissions.", "impact_kgco2e_estimate": 1.2, "difficulty": "easy", "source_reference": "Project Drawdown"
+  },
+  {
+    "id": "act_16", "category": "food", "title": "Buy One Local Produce Item", "description": "Prioritize buying one fruit or vegetable item that is grown locally to reduce 'food miles'.", "impact_kgco2e_estimate": 0.4, "difficulty": "medium", "source_reference": "Leopold Center for Sustainable Agriculture"
+  },
+  {
+    "id": "act_05", "category": "energy", "title": "Lower Your Thermostat by 1°C", "description": "Reduce your home's thermostat by one degree Celsius for the week.", "impact_kgco2e_estimate": 10.0, "difficulty": "easy", "source_reference": "Carbon Trust"
+  },
+  {
+    "id": "act_06", "category": "energy", "title": "Unplug 'Vampire' Electronics", "description": "Unplug electronics that you're not using, like phone chargers and game consoles, from one power strip.", "impact_kgco2e_estimate": 1.5, "difficulty": "easy", "source_reference": "NRDC"
+  },
+  {
+    "id": "act_09", "category": "energy", "title": "Wash Clothes in Cold Water", "description": "Do one load of laundry in cold water instead of hot. Most of the energy comes from heating the water.", "impact_kgco2e_estimate": 0.6, "difficulty": "easy", "source_reference": "EPA"
+  },
+  {
+    "id": "act_12", "category": "energy", "title": "Air Dry One Load of Laundry", "description": "Instead of using a machine dryer, air dry one load of laundry on a rack or clothesline.", "impact_kgco2e_estimate": 2.4, "difficulty": "medium", "source_reference": "NRDC"
+  },
+  {
+    "id": "act_17", "category": "energy", "title": "Take a Shorter Shower", "description": "Try to cut your shower time by two minutes for one shower this week. This saves water and the energy to heat it.", "impact_kgco2e_estimate": 0.2, "difficulty": "easy", "source_reference": "EPA WaterSense"
+  },
+  {
+    "id": "act_07", "category": "other", "title": "Skip One Fast Fashion Purchase", "description": "Resist the urge to buy a new piece of clothing you don't truly need this week.", "impact_kgco2e_estimate": 5.0, "difficulty": "medium", "source_reference": "Internal Estimate"
+  },
+  {
+    "id": "act_13", "category": "other", "title": "Bring a Reusable Bag", "description": "Remember to bring your reusable bags for one grocery shopping trip this week.", "impact_kgco2e_estimate": 0.1, "difficulty": "easy", "source_reference": "UN Environment Programme"
+  },
+  {
+    "id": "act_14", "category": "other", "title": "Use a Reusable Coffee Cup", "description": "If you buy coffee, bring your own reusable cup for one purchase to avoid a disposable one.", "impact_kgco2e_estimate": 0.05, "difficulty": "easy", "source_reference": "Internal calculation"
+  },
+  {
+    "id": "act_18", "category": "other", "title": "Learn About Your Local Recycling", "description": "Spend 15 minutes researching what is and isn't recyclable in your municipality to reduce waste contamination.", "impact_kgco2e_estimate": 0.0, "difficulty": "easy", "source_reference": "Educational Action"
+  },
+  {
+    "id": "act_22", "category": "other", "title": "Cancel One Paper Subscription", "description": "Switch one paper bill or magazine subscription to digital-only to save paper and transport emissions.", "impact_kgco2e_estimate": 0.2, "difficulty": "medium", "source_reference": "Internal Estimate"
+  }
+]

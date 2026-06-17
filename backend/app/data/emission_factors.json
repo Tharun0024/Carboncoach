@@ -1,0 +1,60 @@
+{
+  "transport": {
+    "car_gasoline": {
+      "value": 0.21,
+      "unit": "kg CO₂e/km",
+      "source": "IPCC AR6 2022"
+    },
+    "flight_short": {
+      "value": 0.255,
+      "unit": "kg CO₂e/km",
+      "source": "Our World In Data"
+    },
+    "flight_long": {
+      "value": 0.15,
+      "unit": "kg CO₂e/km",
+      "source": "Our World In Data"
+    },
+    "public_transit_bus": {
+      "value": 0.089,
+      "unit": "kg CO₂e/km",
+      "source": "EPA"
+    }
+  },
+  "energy": {
+    "electricity": {
+      "value": 0.233,
+      "unit": "kg CO₂e/kWh",
+      "source": "EPA"
+    },
+    "natural_gas": {
+      "value": 2.04,
+      "unit": "kg CO₂e/m³",
+      "source": "IPCC AR6 2022"
+    }
+  },
+  "food": {
+    "beef": {
+      "value": 27.0,
+      "unit": "kg CO₂e/kg",
+      "source": "Our World In Data"
+    },
+    "chicken": {
+      "value": 6.9,
+      "unit": "kg CO₂e/kg",
+      "source": "Our World In Data"
+    },
+    "plant_based": {
+      "value": 2.0,
+      "unit": "kg CO₂e/kg",
+      "source": "Our World In Data"
+    }
+  },
+  "other": {
+    "fast_fashion_item": {
+        "value": 5.0,
+        "unit": "kg CO₂e/item",
+        "source": "Internal Estimate"
+    }
+  }
+}

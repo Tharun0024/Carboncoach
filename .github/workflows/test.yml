@@ -1,0 +1,53 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install backend dependencies
+      run: |
+        # This step is a placeholder. In a real project, you would have a requirements.txt
+        # pip install -r backend/requirements.txt
+        pip install pytest pytest-cov
+
+    - name: Run backend tests
+      run: |
+        # The paths are placeholders for the future project structure
+        # mkdir -p backend/tests app
+        # touch backend/tests/test_main.py app/__init__.py
+        pytest backend/tests/ --cov=app --cov-report=xml
+
+    - name: Set up Node.js 18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install frontend dependencies
+      run: |
+        # This step is a placeholder. Assumes a frontend directory with package.json
+        # mkdir -p frontend
+        # echo '{}' > frontend/package.json
+        # cd frontend
+        npm install vitest
+
+    - name: Run frontend tests
+      run: |
+        # This step is a placeholder.
+        # mkdir -p frontend/tests
+        # touch frontend/tests/test.spec.js
+        cd frontend
+        npx vitest run
