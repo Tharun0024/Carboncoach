@@ -1,6 +1,7 @@
 from typing import List, Dict, Any
 from supabase import Client
 from .action_utils import load_actions_library, get_completed_categories, rank_actions, get_next_action
+from .constants import FALLBACK_ACTION
 
 __all__ = [
     "load_actions_library", "get_completed_categories", "rank_actions", "get_next_action",
@@ -50,13 +51,7 @@ async def assign_new_action_for_user(user_id: str, supabase: Client) -> Dict[str
             break
     
     if not next_action_data:
-        return {
-            "id": "fallback",
-            "title": "Explore new actions",
-            "description": "You've done a great job! We're finding new actions for you.",
-            "category": "other",
-            "impact_kgco2e_estimate": 0
-        }
+        return FALLBACK_ACTION.copy()
 
     new_action_to_insert = {
         "user_id": user_id,

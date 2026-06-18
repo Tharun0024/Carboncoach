@@ -1,34 +1,13 @@
 'use client';
 
 import { ActionCard } from "@/components/actions/ActionCard";
-import { Action } from "@/types";
+import { useActions } from "@/hooks/useActions";
 import { motion, useReducedMotion } from 'framer-motion';
 import { History } from 'lucide-react';
 
-// Mock data for demonstration
-const mockActions: Action[] = [
-    {
-        id: 'act_01',
-        title: 'Swap One Car Trip for a Walk or Bike',
-        description: "Replace one short car trip (under 5km) with a walk or bike ride.",
-        category: 'transport',
-        impact_kgco2e_estimate: 1.05,
-        difficulty: 'easy',
-        status: 'completed',
-    },
-    {
-        id: 'act_03',
-        title: 'Go Meatless for One Day',
-        description: "Choose one day this week to eat completely vegetarian.",
-        category: 'food',
-        impact_kgco2e_estimate: 2.5,
-        difficulty: 'easy',
-        status: 'skipped',
-    }
-];
-
 export default function ActionsHistoryPage() {
   const shouldReduceMotion = useReducedMotion();
+  const { actionHistory, isLoading } = useActions();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -62,18 +41,33 @@ export default function ActionsHistoryPage() {
         <p className="text-sm sm:text-base text-slate-400 mt-1">Review historical climate commitments, completed targets, and skipped weeks.</p>
       </motion.div>
 
-      <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="space-y-6"
-      >
-        {mockActions.map((action) => (
-          <motion.div key={action.id} variants={itemVariants}>
-            <ActionCard action={action} />
-          </motion.div>
-        ))}
-      </motion.div>
+      {isLoading ? (
+        <div className="space-y-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="glass-card p-6 rounded-2xl border border-white/10 animate-pulse">
+              <div className="h-4 bg-slate-700 rounded w-3/4 mb-3"></div>
+              <div className="h-3 bg-slate-800 rounded w-full"></div>
+            </div>
+          ))}
+        </div>
+      ) : !actionHistory || actionHistory.length === 0 ? (
+        <div className="glass-card p-8 rounded-2xl border border-white/10 text-center">
+          <p className="text-slate-400 text-sm">No actions yet. Start a conversation with your AI coach to receive your first weekly action.</p>
+        </div>
+      ) : (
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-6"
+        >
+          {actionHistory.map((action) => (
+            <motion.div key={action.id} variants={itemVariants}>
+              <ActionCard action={action} />
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
     </div>
   );
 }

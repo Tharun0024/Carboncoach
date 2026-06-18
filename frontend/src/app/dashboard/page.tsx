@@ -4,23 +4,28 @@ import { FootprintCard } from "@/components/dashboard/FootprintCard";
 import { ImpactTimeline } from "@/components/dashboard/ImpactTimeline";
 import { StreakBadge } from "@/components/dashboard/StreakBadge";
 import { ActionCard } from "@/components/actions/ActionCard";
-import { Action } from "@/types";
+import { useActions } from "@/hooks/useActions";
+import { useAssessment } from "@/hooks/useAssessment";
 import { motion, useReducedMotion } from 'framer-motion';
 import { Trophy, BarChart3, Target, Leaf } from 'lucide-react';
+import { useMemo } from 'react';
 
-// Mock data for demonstration
-const mockCurrentAction: Action = {
-    id: 'act_05',
-    title: 'Lower Your Thermostat by 1°C',
-    description: "Reduce your home's thermostat by one degree Celsius for the week. You'll barely notice the difference, but your energy bill will.",
-    category: 'energy',
-    impact_kgco2e_estimate: 10.0,
-    difficulty: 'easy',
-    status: 'assigned',
-};
+function computeStreak(history?: Array<{ status: string }>) {
+  if (!history || history.length === 0) return 0;
+  let streak = 0;
+  for (const action of history) {
+    if (action.status === 'completed') streak++;
+    else break;
+  }
+  return streak;
+}
 
 export default function DashboardPage() {
   const shouldReduceMotion = useReducedMotion();
+  const { currentAction, actionHistory, isLoading: actionsLoading } = useActions();
+  const { assessments, isLoading: assessmentsLoading } = useAssessment();
+
+  const streakCount = useMemo(() => computeStreak(actionHistory), [actionHistory]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow flex flex-col justify-start bg-[#020617] text-slate-100">
@@ -62,7 +67,18 @@ export default function DashboardPage() {
               <Target className="w-5 h-5 text-emerald-400" />
               <h2 id="current-action-heading" className="text-xl font-bold text-white">Active Assignment</h2>
             </div>
-            <ActionCard action={mockCurrentAction} />
+            {actionsLoading ? (
+              <div className="glass-card p-6 rounded-2xl border border-white/10 animate-pulse">
+                <div className="h-4 bg-slate-700 rounded w-3/4 mb-3"></div>
+                <div className="h-3 bg-slate-800 rounded w-full"></div>
+              </div>
+            ) : currentAction ? (
+              <ActionCard action={currentAction} />
+            ) : (
+              <div className="glass-card p-6 rounded-2xl border border-white/10 text-center">
+                <p className="text-slate-400 text-sm">Start a chat with your AI coach to get your first weekly action.</p>
+              </div>
+            )}
           </motion.section>
 
           {/* Timeline section */}
@@ -74,9 +90,9 @@ export default function DashboardPage() {
           >
             <div className="flex items-center space-x-2.5 mb-4">
               <BarChart3 className="w-5 h-5 text-emerald-400" />
-              <h2 id="impact-timeline-heading" className="text-xl font-bold text-white">Cumulative Savings</h2>
+              <h2 id="impact-timeline-heading" className="text-xl font-bold text-white">Footprint Trend</h2>
             </div>
-            <ImpactTimeline />
+            <ImpactTimeline assessments={assessments} />
           </motion.section>
         </div>
 
@@ -105,7 +121,7 @@ export default function DashboardPage() {
             aria-labelledby="progress-streak-heading"
           >
             <h2 id="progress-streak-heading" className="text-xl font-bold text-white mb-4">Current Progress</h2>
-            <StreakBadge streakCount={3} />
+            <StreakBadge streakCount={streakCount} />
           </motion.section>
         </div>
       </div>

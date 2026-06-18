@@ -11,6 +11,8 @@ class Settings(BaseSettings):
 
     # Anthropic Claude API
     anthropic_api_key: str
+    # Anthropic model identifier — override via ANTHROPIC_MODEL env var
+    anthropic_model: str = "claude-3-haiku-20240307"
 
     # Rate Limiter
     rate_limit_enabled: bool = True

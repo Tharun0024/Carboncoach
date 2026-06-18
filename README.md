@@ -109,13 +109,19 @@ The goal is lasting behavior change, not just temporary awareness.
 | LPG emission factor | 2.983 kg CO₂e/kg | India GHG Program 2023 |
 | PNG emission factor | 2.040 kg CO₂e/m³ | India GHG Program 2023 |
 
-## Security Highlights
+## Security & Privacy
+
 CarbonCoach implements strict, multi-layered security controls to protect user sessions and maintain service integrity:
-- **Input Sanitization**: Automatically filters ASCII control characters (`\x00-\x1F\x7F-\x9F`) and normalizes whitespace configurations.
-- **Prompt Injection Defense**: Proactively intercepts and blocks user queries carrying prompt injection keywords at the service boundary.
-- **IP-Based Rate Limiting**: Limits high-velocity endpoint calls (e.g. 10/min on chat) using `slowapi`.
-- **Response Hardening Headers**: Enforces `Content-Security-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, and custom permissions policies globally.
-- **Supabase Tenant Isolation**: Employs Row-Level Security (RLS) policies to protect session records from unauthorized cross-reads.
+
+| Control | Implementation |
+| :--- | :--- |
+| **Input Sanitisation** | Filters ASCII control characters (`\x00-\x1F\x7F-\x9F`) and normalises whitespace at service boundary |
+| **Prompt Injection Defence** | Keyword blocklist intercepts injection attempts before they reach the LLM |
+| **Rate Limiting** | `slowapi` enforces per-IP limits: **10 req/min** on `/api/chat`, **30 req/min** on `/api/assessments`, **20 req/min** on `/api/actions` |
+| **Response Hardening** | CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, Permissions-Policy on every response |
+| **Database Isolation** | Supabase Row-Level Security (RLS) prevents cross-session reads; no shared state between users |
+| **No PII stored** | Session IDs are random ephemeral tokens — never names, emails, or device fingerprints |
+| **No secrets in code** | All credentials loaded via environment variables; no API keys committed to the repository |
 
 For detailed information, please refer to:
 * [SECURITY.md](file:///y:/PW3/SECURITY.md)
@@ -124,11 +130,23 @@ For detailed information, please refer to:
 * [Dependency Audit](file:///y:/PW3/docs/dependency-audit.md)
 * [Security Checklist](file:///y:/PW3/docs/security-checklist.md)
 
-## Quick Start
+## Quick Start — Local Development
+
 ```bash
-git clone https://github.com/your-repo/carboncoach.git
-docker compose up
-# Open http://localhost:3000
+# 1. Clone the repo
+git clone https://github.com/Tharun0024/Carboncoach.git
+cd Carboncoach
+
+# 2. Backend
+cd backend
+python -m venv .venv && .venv\Scripts\activate    # Windows
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+
+# 3. Frontend — in a separate terminal
+cd frontend
+npm install
+npm run dev   # → http://localhost:3000
 ```
 
 ## AI Design Decisions
@@ -148,21 +166,36 @@ Our emission calculations are grounded in reputable, publicly available data sou
 - Our World In Data
 
 ## Testing
-The project maintains a robust testing suite.
 
-To run backend tests:
+The project maintains a robust testing suite covering unit, integration, and accessibility layers.
+
 ```bash
-pytest backend/tests/
+# Backend tests with coverage
+python -m pytest backend/tests/ -v
+
+# Frontend tests
+npx vitest run
 ```
 
-To run frontend tests:
-```bash
-vitest frontend/tests
-```
+| Suite | Coverage | Count |
+| :--- | :--- | :--- |
+| Backend (pytest) | 85%+ | 35+ tests |
+| Frontend (Vitest + jest-axe) | — | Accessibility + unit |
 
 ## Deployment
 - **Frontend:** The Next.js application is deployed to **Vercel** for optimal performance and scalability.
 - **Backend:** The FastAPI application is deployed to **Railway** for seamless, containerized hosting.
 
 ## Accessibility
-CarbonCoach targets WCAG 2.1 AA accessibility compliance.
+
+CarbonCoach targets **WCAG 2.1 Level AA** compliance. See the full [ACCESSIBILITY_COMPLIANCE_REPORT.md](ACCESSIBILITY_COMPLIANCE_REPORT.md) for component-level audit results.
+
+Key features:
+- **Skip-to-content link** — first element in `<body>`, visible on keyboard focus (`sr-only focus:not-sr-only`)
+- **`lang="en"`** on the `<html>` element
+- **All form inputs** — `<label>` + `htmlFor` + `aria-describedby`
+- **Charts** — `role="img"` + descriptive `aria-label` + visually-hidden data summary
+- **Chat log** — `role="log"` + `aria-live="polite"` + `aria-atomic="true"`
+- **Error alerts** — `role="alert"` + `aria-live="assertive"`
+- **Keyboard navigation** — all interactive elements keyboard-focusable with 44×44px touch targets
+- **Reduced motion** — `useReducedMotion()` disables Framer Motion animations; `@media (prefers-reduced-motion: reduce)` in `globals.css` disables all CSS transitions

@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from functools import lru_cache
 from typing import Dict, Any
 from .footprint_utils import calculate_transport
 from .footprint_energy_food import calculate_energy, calculate_food
@@ -25,18 +26,19 @@ def load_emission_factors_from_json() -> Dict:
     with open(path, 'r') as f:
         return json.load(f)
 
-_emission_factors = None
 
+@lru_cache(maxsize=1)
 def get_emission_factors() -> Dict:
     """Returns cached emission factors.
+
+    Uses ``@lru_cache`` to load the JSON file once and reuse the result
+    for the lifetime of the process, matching the caching pattern used
+    in ``config.py``.
 
     Returns:
         Dict: The cached emission factors configuration.
     """
-    global _emission_factors
-    if _emission_factors is None:
-        _emission_factors = load_emission_factors_from_json()
-    return _emission_factors
+    return load_emission_factors_from_json()
 
 def calculate_total(lifestyle_data: Dict[str, Any], emission_factors: Dict = None) -> Dict[str, Any]:
     """Calculates the total carbon footprint and its breakdown by category.

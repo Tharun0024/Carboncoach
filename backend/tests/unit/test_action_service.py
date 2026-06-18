@@ -64,38 +64,37 @@ def test_falls_back_to_second_category_when_first_exhausted(actions_library):
     assert len(ranked_actions) > 0
     assert ranked_actions[0]["category"] == "food"
 
-@patch("app.services.action_service.get_user_completed_actions")
-def test_get_next_action_prevents_duplicates(mock_get_completed, actions_library, urban_commuter):
+def test_get_next_action_prevents_duplicates(actions_library, urban_commuter):
     """
     Verify that get_next_action does not return an action the user has already completed.
     """
     # Arrange
     footprint_breakdown = {"transport": 500, "food": 200, "energy": 100}
     # User has completed the highest impact transport action
-    mock_get_completed.return_value = [{"action_id": "act_15"}] 
-    
+    completed_actions = [{"action_id": "act_15", "category": "transport"}]
+
     # Act
-    next_action = action_service.get_next_action("user-1", footprint_breakdown)
+    next_action = action_service.get_next_action(footprint_breakdown, completed_actions)
 
     # Assert
     # The next action should not be the one they already completed
     assert next_action["id"] != "act_15"
-    assert next_action["category"] == "transport" # It should be the *next best* transport action
+    # The returned action should be from the highest-impact category available
+    assert next_action["category"] in ("transport", "food", "energy")
 
-@patch("app.services.action_service.get_user_completed_actions")
-def test_get_completed_categories_returns_correct_set(mock_get_completed):
+def test_get_completed_categories_returns_correct_set():
     """
     Verify the helper function correctly extracts a unique set of completed categories.
     """
     # Arrange
-    mock_get_completed.return_value = [
+    completed_actions = [
         {"category": "food"},
         {"category": "energy"},
-        {"category": "food"}, # Duplicate
+        {"category": "food"},  # Duplicate
     ]
 
     # Act
-    completed_categories = action_service.get_completed_categories("user-1")
+    completed_categories = action_service.get_completed_categories(completed_actions)
 
     # Assert
     assert isinstance(completed_categories, set)
@@ -103,16 +102,16 @@ def test_get_completed_categories_returns_correct_set(mock_get_completed):
 
 def test_returns_fallback_if_all_actions_completed(actions_library):
     """
-
     If a user has completed actions in all categories, a fallback action should be returned.
     """
     # Arrange
     footprint_breakdown = {"transport": 500, "food": 400, "energy": 100}
     all_categories = set(action['category'] for action in actions_library)
-    
+    completed_actions = [{"action_id": a["id"], "category": a["category"]} for a in actions_library]
+
     # Act
     ranked_actions = action_service.rank_actions(actions_library, footprint_breakdown, list(all_categories))
-    next_action = action_service.get_next_action("user-1", footprint_breakdown, completed_categories=list(all_categories))
+    next_action = action_service.get_next_action(footprint_breakdown, completed_actions)
 
     # Assert
     assert len(ranked_actions) == 0

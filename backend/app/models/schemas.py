@@ -1,5 +1,5 @@
+from typing import Literal, Optional, Dict, Any
 from pydantic import BaseModel, Field, UUID4
-from typing import Optional, Dict, Any
 
 # --- Chat Schemas ---
 
@@ -39,10 +39,10 @@ class ActionResponse(BaseModel):
     description: str
     potential_savings_kg_co2e: float
     assigned_at: str
-    status: str # e.g., 'assigned', 'completed', 'skipped'
+    status: Literal["assigned", "completed", "skipped"]
 
 class UserActionUpdate(BaseModel):
     """
     Schema for updating the status of a user's action.
     """
-    status: str = Field(..., pattern="^(completed|skipped)$", description="The new status of the action.")
+    status: Literal["completed", "skipped"] = Field(..., description="The new status of the action.")

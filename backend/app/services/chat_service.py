@@ -57,7 +57,7 @@ async def stream_response(user_message: str, session_id: str) -> AsyncGenerator[
         
         try:
             async with client.messages.stream(
-                model="claude-3-haiku-20240307",
+                model=get_settings().anthropic_model,
                 max_tokens=1024,
                 system=system_prompt,
                 messages=[{"role": "user", "content": sanitized_message}]

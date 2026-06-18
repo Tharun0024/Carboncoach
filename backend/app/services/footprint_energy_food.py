@@ -1,5 +1,7 @@
 from typing import Dict, Any
 
+from .constants import MEALS_PER_MONTH, DEFAULT_HOUSEHOLD_SIZE
+
 def calculate_energy(data: Dict[str, Any], factors: Dict) -> float:
     """Calculates monthly CO2e from home energy usage.
 
@@ -32,7 +34,7 @@ def calculate_energy(data: Dict[str, Any], factors: Dict) -> float:
     total += gas_m3 * gas_factor
 
     # Divide by household size (defaulting to 2 if not explicitly provided)
-    household_size = data.get("household_size", 2)
+    household_size = data.get("household_size", DEFAULT_HOUSEHOLD_SIZE)
     return total / household_size
 
 def calculate_food(data: Dict[str, Any], factors: Dict) -> float:
@@ -57,7 +59,7 @@ def calculate_food(data: Dict[str, Any], factors: Dict) -> float:
         meal_key = primary_meal if primary_meal.endswith("_meal") else f"{primary_meal}_meal"
         if meal_key in food_factors:
             meal_factor = food_factors.get(meal_key, {}).get("value", 0)
-            return meal_factor * 30.0
+            return meal_factor * MEALS_PER_MONTH
             
     # Fallback to diet_type mapping if primary_meal is omitted
     consumption_map = {
