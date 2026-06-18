@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Leaf, Menu, X, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import MobileMenu from './navbar/MobileMenu';
 
 export function Navbar() {
+  const shouldReduceMotion = useReducedMotion();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -46,7 +48,7 @@ export function Navbar() {
                     <motion.div
                       layoutId="active-navbar-nav"
                       className="absolute inset-0 bg-white/10 rounded-full border border-white/10"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      transition={shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
                   <span className={`relative z-10 transition-colors duration-200 ${isActive ? 'text-white font-extrabold' : 'text-slate-400 hover:text-white'}`}>
@@ -83,47 +85,13 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Nav */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-white/10 bg-slate-950/95 backdrop-blur-lg"
-          >
-            <div className="space-y-1.5 px-4 pb-6 pt-3">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
-                      isActive
-                        ? 'bg-emerald-500/10 text-white border border-emerald-500/20'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
-                  >
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-              <div className="pt-4 border-t border-white/10">
-                <Link
-                  href="/chat"
-                  onClick={() => setIsOpen(false)}
-                  className="w-full flex items-center justify-center btn-primary py-3 rounded-xl uppercase tracking-wider text-xs font-bold"
-                  style={{ minHeight: '44px' }}
-                >
-                  Calculate My Footprint
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile Navigation Drawer */}
+      <MobileMenu 
+        isOpen={isOpen} 
+        setIsOpen={setIsOpen} 
+        pathname={pathname} 
+        navItems={navItems} 
+      />
     </header>
   );
 }

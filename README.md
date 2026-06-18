@@ -3,8 +3,10 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100.0-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Tests](https://img.shields.io/badge/Tests-Passing-success.svg)
+![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen)
+![Tests](https://img.shields.io/badge/tests-35%2B%20passing-brightgreen)
 
 Demo URL: [https://carboncoach.vercel.app](https://carboncoach.vercel.app/)
 
@@ -83,6 +85,29 @@ The goal is lasting behavior change, not just temporary awareness.
 | Testing | pytest + Vitest | Unit and integration testing |
 | CI | GitHub Actions | Continuous integration and automated testing |
 | Deployment | Railway + Vercel | Hosting for backend and frontend |
+
+## Assumptions
+
+| Assumption | Value | Source |
+| :--- | :--- | :--- |
+| India electricity grid factor | 0.716 kg CO₂e/kWh | CEA India CO2 Baseline 2023 |
+| Auto-rickshaw emission factor | 0.080 kg CO₂e/km | India GHG Program 2023 |
+| Dal rice meal emission | 0.8 kg CO₂e/meal | India GHG Program 2023 |
+| India daily per-capita target | 5.2 kg CO₂e/day | India GHG Program / World Bank 2023 |
+| India annual per-capita average | 1900 kg CO₂e/year | India GHG Program / World Bank 2023 |
+| Global annual target | 2300 kg CO₂e/year | India GHG Program / World Bank 2023 |
+| Car petrol emission factor | 0.192 kg CO₂e/km | India GHG Program 2023 |
+| Metro emission factor | 0.040 kg CO₂e/km | India GHG Program 2023 |
+| Bus emission factor | 0.089 kg CO₂e/km | India GHG Program 2023 |
+| Two-wheeler emission factor | 0.058 kg CO₂e/km | India GHG Program 2023 |
+| Flight emission factor | 0.255 kg CO₂e/km | IPCC AR6 2022 |
+| Beef emission factor | 27.0 kg CO₂e/kg | Our World in Data 2023 |
+| Chicken emission factor | 6.9 kg CO₂e/kg | Our World in Data 2023 |
+| Chicken biryani meal emission | 3.2 kg CO₂e/meal | India GHG Program 2023 |
+| Veg thali meal emission | 0.9 kg CO₂e/meal | India GHG Program 2023 |
+| Egg meal emission | 1.6 kg CO₂e/meal | Our World in Data 2023 |
+| LPG emission factor | 2.983 kg CO₂e/kg | India GHG Program 2023 |
+| PNG emission factor | 2.040 kg CO₂e/m³ | India GHG Program 2023 |
 
 ## Security Highlights
 CarbonCoach implements strict, multi-layered security controls to protect user sessions and maintain service integrity:

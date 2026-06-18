@@ -1,92 +1,52 @@
 import json
 import os
+import re
 from typing import Dict, Any
+from .footprint_utils import calculate_transport
+from .footprint_energy_food import calculate_energy, calculate_food
 
-# This service contains PURE FUNCTIONS only.
-# No database calls, no API calls, no external state.
-# It receives data, calculates results, and returns them.
+__all__ = [
+    "load_emission_factors_from_json",
+    "calculate_transport",
+    "calculate_energy",
+    "calculate_food",
+    "get_emission_factors",
+    "calculate_total",
+    "calculate_fallback_footprint"
+]
 
 def load_emission_factors_from_json() -> Dict:
-    """Loads the emission factors data from the JSON file."""
+    """Loads the emission factors data from the JSON file.
+
+    Returns:
+        Dict: The loaded emission factors configuration.
+    """
     path = os.path.join(os.path.dirname(__file__), '..', 'data', 'emission_factors.json')
     with open(path, 'r') as f:
         return json.load(f)
 
-def calculate_transport(data: Dict[str, Any], factors: Dict) -> float:
-    """Calculates monthly CO2e from transport based on user data and emission factors."""
-    total = 0.0
-    
-    # Commute
-    commute_km_per_week = data.get("commute_km_per_week", 0)
-    method = data.get("commute_method", "car")
-    factor_key = {
-        "car": "car_gasoline",
-        "public_transit": "public_transit_bus"
-    }.get(method, "car_gasoline")
-    
-    commute_factor = factors.get("transport", {}).get(factor_key, {}).get("value", 0)
-    total += commute_km_per_week * (52 / 12) * commute_factor # Monthly emissions
-
-    # Flights (annual emissions averaged monthly)
-    # Assuming 1000km for short-haul and 5000km for long-haul for calculation
-    short_flights = data.get("flights_per_year_short", 0)
-    long_flights = data.get("flights_per_year_long", 0)
-    short_flight_factor = factors.get("transport", {}).get("flight_short", {}).get("value", 0)
-    long_flight_factor = factors.get("transport", {}).get("flight_long", {}).get("value", 0)
-    
-    total += (short_flights * 1000 * short_flight_factor) / 12
-    total += (long_flights * 5000 * long_flight_factor) / 12
-    
-    return total
-
-def calculate_energy(data: Dict[str, Any], factors: Dict) -> float:
-    """Calculates monthly CO2e from home energy usage."""
-    total = 0.0
-    
-    # Electricity
-    electricity_kwh = data.get("electricity_kwh_per_month", 0)
-    electricity_factor = factors.get("energy", {}).get("electricity", {}).get("value", 0)
-    total += electricity_kwh * electricity_factor
-
-    # Natural Gas
-    gas_m3 = data.get("gas_m3_per_month", 0)
-    gas_factor = factors.get("energy", {}).get("natural_gas", {}).get("value", 0)
-    total += gas_m3 * gas_factor
-
-    return total
-
-def calculate_food(data: Dict[str, Any], factors: Dict) -> float:
-    """Calculates monthly CO2e from diet."""
-    diet = data.get("diet_type", "omnivore") # e.g., 'beef', 'chicken', 'plant_based'
-    
-    # This is a simplified model. Assume average consumption per month.
-    # A better model would use weekly servings.
-    # kg_per_month mapping
-    consumption_map = {
-        "beef": 1.5, # kg of beef per month
-        "chicken": 4.0, # kg of chicken per month
-        "plant_based": 0, # Base
-        "omnivore": 2.0, # Average mix
-        "vegetarian": 0,
-    }
-    
-    food_factor = factors.get("food", {}).get(diet, {}).get("value", 0)
-    kg_consumed = consumption_map.get(diet, 2.0)
-    
-    return food_factor * kg_consumed
-
 _emission_factors = None
 
 def get_emission_factors() -> Dict:
-    """Returns cached emission factors."""
+    """Returns cached emission factors.
+
+    Returns:
+        Dict: The cached emission factors configuration.
+    """
     global _emission_factors
     if _emission_factors is None:
         _emission_factors = load_emission_factors_from_json()
     return _emission_factors
 
-def calculate_total(lifestyle_data: Dict[str, Any], emission_factors: Dict = None) -> Dict[str, float]:
-    """
-    Calculates the total carbon footprint and its breakdown by category.
+def calculate_total(lifestyle_data: Dict[str, Any], emission_factors: Dict = None) -> Dict[str, Any]:
+    """Calculates the total carbon footprint and its breakdown by category.
+
+    Args:
+        lifestyle_data (Dict[str, Any]): The user's input lifestyle assessment data.
+        emission_factors (Dict, optional): Custom emission factors mapping. Defaults to None.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing total monthly kg CO2e and category breakdown.
     """
     if emission_factors is None:
         emission_factors = get_emission_factors()
@@ -98,13 +58,65 @@ def calculate_total(lifestyle_data: Dict[str, Any], emission_factors: Dict = Non
         "transport": calculate_transport(lifestyle_data, emission_factors),
         "energy": calculate_energy(lifestyle_data, emission_factors),
         "food": calculate_food(lifestyle_data, emission_factors),
-        "other": 0.0 # Placeholder for other categories
+        "other": 0.0
     }
     
     total = sum(breakdown.values())
     
     return {
         "total_kg_co2e": total,
+        "total_kgco2e": total,
         "breakdown": breakdown
     }
 
+def calculate_fallback_footprint(user_message: str) -> Dict[str, Any]:
+    """Calculates a fallback carbon footprint using simple regex/heuristics on user message.
+
+    Args:
+        user_message (str): The raw text message sent by the user.
+
+    Returns:
+        Dict[str, Any]: A valid assessment payload carrying raw data and a fallback flag.
+    """
+    # Simple regex extractions for partial values
+    km_match = re.search(r'(\d+)\s*km', user_message, re.IGNORECASE)
+    commute_km = int(km_match.group(1)) if km_match else 15
+    
+    kwh_match = re.search(r'(\d+)\s*kwh', user_message, re.IGNORECASE)
+    electricity = int(kwh_match.group(1)) if kwh_match else 120
+    
+    # Diet heuristic mappings
+    diet = "vegetarian"
+    if any(keyword in user_message.lower() for keyword in ["chicken", "non-veg", "meat"]):
+        diet = "non_vegetarian"
+    elif "beef" in user_message.lower():
+        diet = "beef"
+        
+    primary_meal = "dal_rice"
+    if "biryani" in user_message.lower():
+        primary_meal = "chicken_biryani"
+    elif "thali" in user_message.lower():
+        primary_meal = "veg_thali"
+
+    fallback_lifestyle = {
+        "auto_rickshaw_km_per_week": 10,
+        "metro_km_per_week": 15,
+        "car_km_per_week": 0,
+        "flights_per_year": 0,
+        "electricity_kwh_per_month": electricity,
+        "lpg_kg_per_month": 8,
+        "diet_type": diet,
+        "primary_meal": primary_meal,
+        "commute_km_per_week": commute_km,
+        "commute_method": "public_transit"
+    }
+
+    calculation = calculate_total(fallback_lifestyle)
+    
+    return {
+        "total_kg_co2e": calculation["total_kg_co2e"],
+        "total_kgco2e": calculation["total_kg_co2e"],
+        "breakdown": calculation["breakdown"],
+        "raw_data": fallback_lifestyle,
+        "fallback": True
+    }

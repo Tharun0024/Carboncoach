@@ -4,6 +4,16 @@ import { render, screen } from '@testing-library/react';
 import { FootprintCard } from '../src/components/dashboard/FootprintCard';
 import React from 'react';
 
+// Mock useAssessment hook
+vi.mock('@/hooks/useAssessment', () => {
+  return {
+    useAssessment: () => ({
+      assessments: null,
+      isLoading: false
+    })
+  };
+});
+
 // Mock Recharts since JSDom lacks full Canvas / SVG layout rendering APIs
 vi.mock('recharts', () => {
   return {

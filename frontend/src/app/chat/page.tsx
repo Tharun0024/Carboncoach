@@ -2,16 +2,18 @@
 
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { ShieldAlert, Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 export default function ChatPage() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div className="w-full max-w-4xl mx-auto flex-grow flex flex-col px-4 py-8 md:py-12 bg-[#020617] text-slate-100">
       {/* Header Info */}
       <motion.div 
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.4 }}
         className="text-center mb-8"
       >
         <div className="inline-flex items-center space-x-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-400 mb-3">
@@ -28,9 +30,9 @@ export default function ChatPage() {
 
       {/* Main Chat Area */}
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.1 }}
         className="flex-grow flex flex-col min-h-[500px]"
       >
         <ChatInterface />

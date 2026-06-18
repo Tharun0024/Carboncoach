@@ -29,18 +29,7 @@ def test_app():
 
 @pytest.fixture(autouse=True)
 def override_dependencies(monkeypatch):
-    """
-    This fixture automatically mocks dependencies for all tests,
-    preventing any real network calls.
-    """
-    # Mock settings to avoid loading .env file during tests
-    mock_settings = {
-        "supabase_url": "http://mock-supabase.com",
-        "supabase_key": "mock-key",
-        "anthropic_api_key": "mock-anthropic-key",
-        "rate_limit_enabled": True,
-        "frontend_url": "http://localhost:3000"
-    }
+    """Mocks dependencies for all tests, preventing real network calls."""
     monkeypatch.setattr("app.config.get_settings", lambda: MagicMock(**mock_settings))
     
     # Mock Supabase client
@@ -106,3 +95,19 @@ def student():
         "electricity_kwh_per_month": 120,
         "diet_type": "vegetarian",
     }
+
+@pytest.fixture
+def chennai_commuter():
+    """Test data for a typical Chennai commuter using rickshaws, metro, and LPG."""
+    return {
+        "auto_rickshaw_km_per_week": 28,
+        "metro_km_per_week": 42,
+        "car_km_per_week": 0,
+        "flights_per_year": 1,
+        "electricity_kwh_per_month": 180,
+        "lpg_kg_per_month": 12,
+        "diet_type": "non_vegetarian",
+        "primary_meal": "dal_rice",
+        "shopping_level": "low"
+    }
+

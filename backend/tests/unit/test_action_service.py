@@ -117,3 +117,56 @@ def test_returns_fallback_if_all_actions_completed(actions_library):
     # Assert
     assert len(ranked_actions) == 0
     assert next_action["id"] == "fallback"
+
+
+@pytest.fixture
+def sample_actions(actions_library):
+    """Fixture returning the actions library as sample actions."""
+    return actions_library
+
+def get_all_actions_by_category(category: str):
+    """Helper to retrieve all actions of a specific category from the library."""
+    from app.services.action_service import load_actions_library
+    lib = load_actions_library()
+    return [a for a in lib if a["category"] == category]
+
+def get_next_action(commuter_lifestyle, action_history):
+    """Wrapper mapping test request to action service logic."""
+    from app.services.footprint_service import calculate_total
+    from app.services.action_service import load_actions_library, rank_actions
+    
+    breakdown = calculate_total(commuter_lifestyle)["breakdown"]
+    completed_action_ids = {item["action_id"] for item in action_history}
+    
+    lib = load_actions_library()
+    completed_categories = set()
+    for action in lib:
+        if action["id"] in completed_action_ids:
+            completed_categories.add(action["category"])
+            
+    ranked = rank_actions(lib, breakdown, completed_categories)
+    
+    for action in ranked:
+        if action["id"] not in completed_action_ids:
+            return action
+            
+    return {
+        "id": "fallback",
+        "title": "Explore new actions",
+        "description": "You've done a great job! We're finding new actions for you.",
+        "category": "other",
+        "impact_kgco2e_estimate": 0
+    }
+
+def test_never_returns_same_action_twice(sample_actions, chennai_commuter):
+    """Action service must not reassign an action already in history."""
+    first = get_next_action(chennai_commuter, action_history=[])
+    second = get_next_action(chennai_commuter, action_history=[{"action_id": first["id"]}])
+    assert first["id"] != second["id"]
+
+def test_falls_back_to_second_category_when_first_exhausted_for_commuter(chennai_commuter):
+    """When all actions in top category are used, must return from next category."""
+    all_transport = get_all_actions_by_category("transport")
+    history = [{"action_id": a["id"]} for a in all_transport]
+    result = get_next_action(chennai_commuter, action_history=history)
+    assert result["category"] != "transport"

@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "carboncoach"
+version = "0.1.0"
+description = "CarbonCoach - AI Climate-Tech SaaS Carbon Footprint tracker and coach"
+authors = ["CarbonCoach Contributors"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/Tharun0024/Carboncoach.git"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,60 +1,29 @@
 {
   "transport": {
-    "car_gasoline": {
-      "value": 0.21,
-      "unit": "kg CO₂e/km",
-      "source": "IPCC AR6 2022"
-    },
-    "flight_short": {
-      "value": 0.255,
-      "unit": "kg CO₂e/km",
-      "source": "Our World In Data"
-    },
-    "flight_long": {
-      "value": 0.15,
-      "unit": "kg CO₂e/km",
-      "source": "Our World In Data"
-    },
-    "public_transit_bus": {
-      "value": 0.089,
-      "unit": "kg CO₂e/km",
-      "source": "EPA"
-    }
-  },
-  "energy": {
-    "electricity": {
-      "value": 0.233,
-      "unit": "kg CO₂e/kWh",
-      "source": "EPA"
-    },
-    "natural_gas": {
-      "value": 2.04,
-      "unit": "kg CO₂e/m³",
-      "source": "IPCC AR6 2022"
-    }
+    "car_petrol_km":     { "value": 0.192, "unit": "kg_co2e_per_km",  "source": "India GHG Program 2023" },
+    "auto_rickshaw_km":  { "value": 0.080, "unit": "kg_co2e_per_km",  "source": "India GHG Program 2023" },
+    "metro_km":          { "value": 0.040, "unit": "kg_co2e_per_km",  "source": "India GHG Program 2023" },
+    "bus_km":            { "value": 0.089, "unit": "kg_co2e_per_km",  "source": "India GHG Program 2023" },
+    "two_wheeler_km":    { "value": 0.058, "unit": "kg_co2e_per_km",  "source": "India GHG Program 2023" },
+    "flight_km":         { "value": 0.255, "unit": "kg_co2e_per_km",  "source": "IPCC AR6 2022" }
   },
   "food": {
-    "beef": {
-      "value": 27.0,
-      "unit": "kg CO₂e/kg",
-      "source": "Our World In Data"
-    },
-    "chicken": {
-      "value": 6.9,
-      "unit": "kg CO₂e/kg",
-      "source": "Our World In Data"
-    },
-    "plant_based": {
-      "value": 2.0,
-      "unit": "kg CO₂e/kg",
-      "source": "Our World In Data"
-    }
+    "beef_kg":              { "value": 27.0, "unit": "kg_co2e_per_kg",   "source": "Our World in Data 2023" },
+    "chicken_kg":           { "value": 6.9,  "unit": "kg_co2e_per_kg",   "source": "Our World in Data 2023" },
+    "chicken_biryani_meal": { "value": 3.2,  "unit": "kg_co2e_per_meal", "source": "India GHG Program 2023" },
+    "dal_rice_meal":        { "value": 0.8,  "unit": "kg_co2e_per_meal", "source": "India GHG Program 2023" },
+    "veg_thali_meal":       { "value": 0.9,  "unit": "kg_co2e_per_meal", "source": "India GHG Program 2023" },
+    "egg_meal":             { "value": 1.6,  "unit": "kg_co2e_per_meal", "source": "Our World in Data 2023" }
   },
-  "other": {
-    "fast_fashion_item": {
-        "value": 5.0,
-        "unit": "kg CO₂e/item",
-        "source": "Internal Estimate"
-    }
+  "energy": {
+    "electricity_kwh": { "value": 0.716, "unit": "kg_co2e_per_kwh", "source": "CEA India CO2 Baseline 2023" },
+    "lpg_kg":          { "value": 2.983, "unit": "kg_co2e_per_kg",  "source": "India GHG Program 2023" },
+    "png_m3":          { "value": 2.040, "unit": "kg_co2e_per_m3",  "source": "India GHG Program 2023" }
+  },
+  "baseline": {
+    "india_daily_target_kg":      5.2,
+    "india_annual_per_capita_kg": 1900,
+    "global_annual_target_kg":    2300,
+    "source": "India GHG Program / World Bank 2023"
   }
 }

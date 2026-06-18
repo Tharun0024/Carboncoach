@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Action } from '@/types';
 import { Car, Zap, Flame, Leaf, CheckCircle2, AlertCircle } from 'lucide-react';
+import SkippedReasonForm from './SkippedReasonForm';
 
 interface ActionCardProps {
   action: Action;
@@ -16,7 +17,6 @@ const CATEGORY_MAP = {
 
 export function ActionCard({ action }: ActionCardProps) {
   const [isSkipped, setIsSkipped] = useState(false);
-  const [reason, setReason] = useState('');
 
   const handleSkip = () => {
     setIsSkipped(true);
@@ -83,32 +83,11 @@ export function ActionCard({ action }: ActionCardProps) {
       )}
 
       {/* Skipped Input Box */}
-      {isSkipped && (
-        <div className="mt-6 border-t border-white/10 pt-5">
-          <label htmlFor={`skip-reason-${action.id}`} className="block text-sm font-medium text-slate-300 mb-2">
-            Why did you skip this action? (Optional)
-          </label>
-          <textarea
-            id={`skip-reason-${action.id}`}
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            rows={3}
-            className="w-full p-3 bg-slate-950/80 text-white placeholder-slate-505 placeholder-slate-500 border border-white/10 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all duration-200"
-            placeholder="e.g., It was raining all week."
-          />
-          <button
-            className="mt-3 bg-white hover:bg-slate-100 text-slate-950 font-bold py-2.5 px-5 rounded-xl transition-all duration-200 shadow-sm"
-            style={{ minHeight: '44px' }}
-            aria-label="Submit reason for skipping"
-          >
-            Submit
-          </button>
-        </div>
-      )}
+      {isSkipped && <SkippedReasonForm actionId={action.id} />}
 
       {/* Finished States */}
       {action.status === 'completed' && (
-        <div className="mt-6 flex items-center justify-center space-x-2 font-bold text-emerald-450 text-emerald-450 bg-emerald-500/10 border border-emerald-500/20 py-3 px-4 rounded-xl">
+        <div className="mt-6 flex items-center justify-center space-x-2 font-bold text-emerald-450 bg-emerald-500/10 border border-emerald-500/20 py-3 px-4 rounded-xl">
           <CheckCircle2 className="w-5 h-5 text-emerald-400" />
           <span className="text-emerald-400">Completed! Great job!</span>
         </div>

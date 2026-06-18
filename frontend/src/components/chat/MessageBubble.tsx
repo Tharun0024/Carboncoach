@@ -2,7 +2,7 @@
 
 import { Message } from '@/types';
 import { StreamingText } from './StreamingText';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Sparkles, User } from 'lucide-react';
 
 interface MessageBubbleProps {
@@ -10,13 +10,14 @@ interface MessageBubbleProps {
 }
 
 export function MessageBubble({ message }: MessageBubbleProps) {
+  const shouldReduceMotion = useReducedMotion();
   const isUser = message.role === 'user';
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
       role="listitem"
       className={`flex items-start gap-3 w-full ${isUser ? 'justify-end' : 'justify-start'}`}
     >

@@ -5,7 +5,7 @@ import { ImpactTimeline } from "@/components/dashboard/ImpactTimeline";
 import { StreakBadge } from "@/components/dashboard/StreakBadge";
 import { ActionCard } from "@/components/actions/ActionCard";
 import { Action } from "@/types";
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Trophy, BarChart3, Target, Leaf } from 'lucide-react';
 
 // Mock data for demonstration
@@ -20,13 +20,15 @@ const mockCurrentAction: Action = {
 };
 
 export default function DashboardPage() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow flex flex-col justify-start bg-[#020617] text-slate-100">
       {/* Header section */}
       <motion.header 
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.4 }}
         className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-white/10 pb-6"
       >
         <div>
@@ -50,9 +52,9 @@ export default function DashboardPage() {
           
           {/* Action section */}
           <motion.section 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.15 }}
             aria-labelledby="current-action-heading"
             className="relative"
           >
@@ -65,9 +67,9 @@ export default function DashboardPage() {
 
           {/* Timeline section */}
           <motion.section 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.2 }}
             aria-labelledby="impact-timeline-heading"
           >
             <div className="flex items-center space-x-2.5 mb-4">
@@ -83,9 +85,9 @@ export default function DashboardPage() {
           
           {/* Footprint Breakdown */}
           <motion.section 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.25 }}
             aria-labelledby="footprint-breakdown-heading"
           >
             <div className="flex items-center space-x-2.5 mb-4">
@@ -97,9 +99,9 @@ export default function DashboardPage() {
 
           {/* Progress Streak */}
           <motion.section 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.3 }}
             aria-labelledby="progress-streak-heading"
           >
             <h2 id="progress-streak-heading" className="text-xl font-bold text-white mb-4">Current Progress</h2>

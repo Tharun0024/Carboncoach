@@ -2,7 +2,7 @@
 
 import { ActionCard } from "@/components/actions/ActionCard";
 import { Action } from "@/types";
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { History } from 'lucide-react';
 
 // Mock data for demonstration
@@ -28,25 +28,31 @@ const mockActions: Action[] = [
 ];
 
 export default function ActionsHistoryPage() {
+  const shouldReduceMotion = useReducedMotion();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
+      transition: shouldReduceMotion ? { duration: 0 } : { staggerChildren: 0.1 }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 100, damping: 15 } }
+    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 15 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: shouldReduceMotion ? { duration: 0 } : { type: 'spring' as const, stiffness: 100, damping: 15 } 
+    }
   };
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow flex flex-col justify-start bg-[#020617] text-slate-100">
       <motion.div 
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.4 }}
         className="mb-8 border-b border-white/10 pb-6"
       >
         <h1 className="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
